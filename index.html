@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Montserrat:wght@900&display=swap" rel="stylesheet">
 <style>
-:root{--y:#F6C844;--c:#EDEDE6;--k:#000;--g:#161614;--m:#8d8d85;--d:'Inter','Helvetica Neue',Arial,sans-serif;--b:'Inter','Helvetica Neue',Arial,sans-serif;--lg:'Montserrat','Arial Black',sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+:root{--y:#F6C844;--c:#EDEDE6;--k:#0a0a09;--g:#161614;--m:#8d8d85;--d:'Inter','Helvetica Neue',Arial,sans-serif;--b:'Inter','Helvetica Neue',Arial,sans-serif;--lg:'Montserrat','Arial Black',sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
 *,*:before,*:after{box-sizing:inherit}
 html{scroll-behavior:smooth;scroll-padding-top:80px}
 body{margin:0;background:var(--k);color:var(--c);font-family:var(--b);font-size:17px;line-height:1.6;overflow-x:hidden}
@@ -70,6 +70,16 @@ textarea{min-height:110px;resize:vertical}
 .pan{background:var(--g);border-radius:20px;padding:28px}.pan h2{font-size:30px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid #2c2c28}
+.plist{display:grid}
+.pitem{display:grid;grid-template-columns:22px 48px 1fr auto;gap:14px;align-items:center;padding:9px 0;border-top:1px solid #2c2c28;cursor:grab;transition:background .2s,opacity .2s}
+.pitem.drag{opacity:.35}
+.pitem.over{background:#1c1c18}
+.pitem .handle{color:var(--m);text-align:center;font-size:16px}
+.pitem .th2{width:48px;border-radius:4px;overflow:hidden}.pitem .th2 svg,.pitem .th2 img{display:block;width:100%;height:auto}
+.pitem .ord{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.iconbtn{background:none;border:1px solid #333;color:var(--m);width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:12px;line-height:1}
+.iconbtn:hover:not(:disabled){border-color:var(--y);color:var(--y)}
+.iconbtn:disabled{opacity:.25;cursor:default}
 .hint{color:var(--m);font-size:14px}
 h2{font-weight:800;font-size:clamp(56px,9vw,150px);letter-spacing:-.075em;line-height:.9;margin:14px 0 0}
 .sh{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:56px}
@@ -98,6 +108,10 @@ nav .pill{padding:8px 20px;background:#121211;font-size:15px}nav .pill:hover,nav
 @media(max-width:560px){nav div a:nth-child(3){display:none}.logo{font-size:18px}}
 footer{padding:50px 5vw;color:var(--m);font-size:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 footer a{color:var(--y)}
+#langBtn{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:25;background:#121211;border:1px solid #333;color:var(--c);padding:10px 16px;border-radius:99px;font-weight:700;font-size:13px;cursor:pointer;transition:.3s}
+#langBtn:hover{border-color:var(--y);color:var(--y)}
+.adm-link{opacity:.3;font-size:12px;margin-left:auto}
+.adm-link:hover{opacity:.8}
 #toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--y);color:var(--k);padding:12px 24px;border-radius:99px;font-weight:700;opacity:0;pointer-events:none;transition:.4s;z-index:30}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 @media(max-width:760px){.film{grid-template-columns:1fr}.film .pos{position:static;max-width:320px}.row{grid-template-columns:64px 1fr}.row .st{grid-column:2}.row .th{width:64px}.two{grid-template-columns:1fr}nav div{gap:16px;font-size:14px}}
@@ -105,9 +119,10 @@ footer a{color:var(--y)}
 </style>
 </head>
 <body>
-<nav><a class="logo" href="#/" aria-label="Accueil FlickThink">Flick <b>Think</b><i></i></a><div><a href="#posters">Posters</a><a href="#reviews">Reviews</a><a href="#about">À propos</a></div><a class="pill" href="#/admin" id="na">Admin</a></nav>
+<nav><a class="logo" href="#/" aria-label="Accueil FlickThink">Flick <b>Think</b><i></i></a><div><a href="#posters" id="nl1"></a><a href="#reviews" id="nl2"></a><a href="#about" id="nl3"></a></div></nav>
+<button id="langBtn" aria-label="Changer de langue">EN</button>
 <main id="app"></main>
-<footer><span>© FlickThink — posters & critiques de cinéma</span><a href="https://www.instagram.com/flickthink_/" target="_blank" rel="noopener">@flickthink_ sur Instagram</a></footer>
+<footer><span id="ftxt"></span><a id="fig" href="https://www.instagram.com/flickthink_/" target="_blank" rel="noopener"></a><a href="#/admin" id="na" class="adm-link">Admin</a></footer>
 <div id="toast" role="status"></div>
 <script>
 const SEED_POSTERS=[
@@ -130,6 +145,37 @@ const SEED_REVIEWS={
 };
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const slug=t=>String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+let LANG='fr';try{LANG=localStorage.getItem('ftlang')||'fr'}catch(e){}
+const I18N={
+ fr:{posters:'Posters',critiques:'Critiques',about:'À propos',eyebrow:'Critique & design indépendants',
+  h1a:'Regarde vite.',h1b:'Pense longtemps.',heroP:'Des <b>posters</b> dessinés à la main et des <b>critiques</b> écrites sans détour.',heroCta:'Voir les posters',
+  ticker:['Design','Poster','Critique','Cinéma','Passion','Pensez','Imaginer','Échanger'],
+  s1eb:'01 / Archives visuelles',s1h:'Posters',s1p:"Affiches originales en jaune, noir et crème. Touchez un poster pour lire la critique.",
+  moreP:'Découvrir plus de posters',lessP:'Voir moins',noPoster:'Aucun poster pour le moment.',
+  s2eb:'02 / Rédaction',s2h:'Critiques',s2p:'Critiques, idées & cinéma.',lastReview:'Dernière critique',readReview:'Lire la critique →',
+  moreR:'Voir plus de critiques',lessR:'Voir moins',noReview:'Aucune critique publiée.',
+  s3eb:'03 / FlickThink',aboutT1:'Pense',aboutT2:'différemment.',
+  aboutP1:"FlickThink transforme un compte cinéma en véritable objet éditorial. Je dessine des posters et j'écris des critiques : un endroit où l'image, la typographie et le texte ont la même importance.",
+  aboutP2:'Le site accueille progressivement une bibliothèque de films, des discussions communautaires et de nouvelles séries de posters.',
+  aboutLink:'Suivre @flickthink_ sur Instagram',footer:'© FlickThink — posters & critiques de cinéma',footerIg:'@flickthink_ sur Instagram',
+  back:'Retour',comingSoon:'La critique de ce film arrive bientôt.',commentsT:n=>`Commentaires (${n})`,pseudo:'Votre pseudo',yourMsg:'Votre avis sur le film',publishC:'Publier le commentaire',needBoth:'Ajoutez un pseudo et un message',published:'Commentaire publié',
+  admGate:'Espace admin',admHint:'Aperçu : le mot de passe de démo est <b>flick</b>. Sur le vrai site, la connexion sera sécurisée côté serveur.',pwPh:'Mot de passe',login:'Se connecter',wrongPw:'Mot de passe incorrect',newReview:'Nouvelle critique : ',postersOnline:' posters en ligne'},
+ en:{posters:'Posters',critiques:'Reviews',about:'About',eyebrow:'Independent critic & designer',
+  h1a:'Look fast.',h1b:'Think slow.',heroP:'Hand-drawn <b>posters</b> and <b>reviews</b> written without filter.',heroCta:'See the posters',
+  ticker:['Design','Poster','Review','Cinema','Passion','Think','Imagine','Share'],
+  s1eb:'01 / Visual archive',s1h:'Posters',s1p:'Original artwork in yellow, black and cream. Tap a poster to read the review.',
+  moreP:'Discover more posters',lessP:'Show less',noPoster:'No posters yet.',
+  s2eb:'02 / Editorial',s2h:'Reviews',s2p:'Reviews, ideas & cinema.',lastReview:'Latest review',readReview:'Read the review →',
+  moreR:'More reviews',lessR:'Show less',noReview:'No reviews published yet.',
+  s3eb:'03 / FlickThink',aboutT1:'Think',aboutT2:'different.',
+  aboutP1:'FlickThink turns a film account into a real editorial object. I draw the posters and write the reviews myself: a place where image, type and text carry equal weight.',
+  aboutP2:'The site will gradually grow into a film library, community discussions and new poster series.',
+  aboutLink:'Follow @flickthink_ on Instagram',footer:'© FlickThink — film posters & reviews',footerIg:'@flickthink_ on Instagram',
+  back:'Back',comingSoon:'The review for this film is coming soon.',commentsT:n=>`Comments (${n})`,pseudo:'Your name',yourMsg:'Your thoughts on the film',publishC:'Post comment',needBoth:'Add a name and a message',published:'Comment posted',
+  admGate:'Admin area',admHint:'Preview: the demo password is <b>flick</b>. On the live site, login will be secured server-side.',pwPh:'Password',login:'Log in',wrongPw:'Incorrect password',newReview:'New review: ',postersOnline:' posters online'}
+};
+const T=k=>I18N[LANG][k];
+function applyChrome(){document.documentElement.lang=LANG;$('#nl1').textContent=T('posters');$('#nl2').textContent=T('critiques');$('#nl3').textContent=T('about');$('#ftxt').textContent=T('footer');$('#fig').textContent=T('footerIg');$('#langBtn').textContent=LANG==='fr'?'EN':'FR'}
 let db;try{db=JSON.parse(localStorage.getItem('ft4'))}catch(e){}
 if(!db||!db.posters)db={posters:SEED_POSTERS,reviews:SEED_REVIEWS,com:{}};
 const save=()=>{try{localStorage.setItem('ft4',JSON.stringify(db))}catch(e){toast('Stockage plein : image trop lourde')}};
@@ -164,32 +210,32 @@ const card=(p,i)=>{const rv=db.reviews[p.film];return `<a class="card" href="#/f
 const row=r=>{const th=db.posters.find(p=>p.film===r.film)||{t:r.t,k:0,c:['#F6C844','#000']};return `<a class="row" href="#/film/${r.film}"><div class="th">${art(th)}</div><div><h3>${esc(r.t)}</h3><p>${r.y||''}${r.tg?' · '+esc(r.tg):''}</p></div><span class="st">${stars(r.r)}</span></a>`};
 function home(){
  const posters=db.posters,revs=reviewsList(),ft=revs[0],others=revs.slice(1);
- const mq=['Cinema & Design','Reviews','Posters','FlickThink',...(ft?['Nouvelle review : '+ft.t]:[]),posters.length+' posters en ligne'];
+ const mq=[...T('ticker'),...(ft?[T('newReview')+ft.t]:[]),posters.length+T('postersOnline')];
  const mi=mq.map(x=>`<span>${esc(x)}</span><b>•</b>`).join('');
- const pGrid=()=>{const list=postersExpanded?posters:posters.slice(0,6);return list.map(card).join('')||'<p class="hint">Aucun poster pour le moment.</p>'};
+ const pGrid=()=>{const list=postersExpanded?posters:posters.slice(0,6);return list.map(card).join('')||`<p class="hint">${T('noPoster')}</p>`};
  const rFirst=others.slice(0,4),rExtra=others.slice(4);
- $('#app').innerHTML=`<header class="hero"><div class="eb">Independent Critic and Designer</div><h1 id="h1"><span><i style="--n:0">Watch closely.</i></span><span><i style="--n:1">Think deeper.</i></span></h1><p>Des <b>posters</b> dessinés à la main et des <b>critiques</b> écrites sans détour.</p><a class="cta" href="#posters">Voir les posters</a></header>
+ $('#app').innerHTML=`<header class="hero"><div class="eb">${T('eyebrow')}</div><h1 id="h1"><span><i style="--n:0">${T('h1a')}</i></span><span><i style="--n:1">${T('h1b')}</i></span></h1><p>${T('heroP')}</p><a class="cta" href="#posters">${T('heroCta')}</a></header>
  <div class="mq" aria-hidden="true"><div>${mi+mi}</div></div>
- <section id="posters"><div class="sh"><div><div class="eb y">01 / Visual archive</div><h2>Posters</h2></div><p>Affiches originales en jaune, noir et crème. Touchez un poster pour lire la critique.</p></div><div class="grid" id="pgrid">${pGrid()}</div>${posters.length>6?`<button class="more" id="pmore">${postersExpanded?'Voir moins':'Découvrir plus de posters'}</button>`:''}</section>
- <section id="reviews"><div class="sh"><div><div class="eb y">02 / Editorial</div><h2>Reviews</h2></div><p>Critiques, idées & cinéma.</p></div>${ft?`<div class="rvg"><a class="feat" href="#/film/${ft.film}"><div class="top"><span>Dernière review</span><b>${(+ft.r).toFixed(1)} / 5</b></div><h3>${esc(ft.t)}${ft.tg?`<em>${esc(ft.tg)}</em>`:''}</h3><p class="rev-clamp">${revHtml(ft.rv)}</p><span class="pill">Lire la review →</span></a><div>${rFirst.map(row).join('')}</div></div>${rExtra.length?`<div class="more-rev" id="rextra" style="${reviewsExpanded?'':'display:none'}">${rExtra.map(row).join('')}</div><button class="more" id="rmore">${reviewsExpanded?'Voir moins':'Voir plus de critiques'}</button>`:''}`:'<p class="hint">Aucune review publiée.</p>'}</section>
- <section id="about" class="abt"><h2 class="big">Think<em>different.</em></h2><div class="tx"><div class="eb y">03 / FlickThink</div><p>FlickThink transforme un compte cinéma en véritable objet éditorial. Je dessine des posters et j'écris des critiques : un endroit où l'image, la typographie et le texte ont la même importance.</p><p>Le site accueille progressivement une bibliothèque de films, des discussions communautaires et de nouvelles séries de posters.</p><p><a href="https://www.instagram.com/flickthink_/" target="_blank" rel="noopener">Suivre @flickthink_ sur Instagram</a></p></div></section>`;
- const pm=$('#pmore');if(pm)pm.onclick=()=>{postersExpanded=!postersExpanded;$('#pgrid').innerHTML=pGrid();pm.textContent=postersExpanded?'Voir moins':'Découvrir plus de posters'};
- const rm=$('#rmore');if(rm)rm.onclick=()=>{reviewsExpanded=!reviewsExpanded;$('#rextra').style.display=reviewsExpanded?'':'none';rm.textContent=reviewsExpanded?'Voir moins':'Voir plus de critiques'};
+ <section id="posters"><div class="sh"><div><div class="eb y">${T('s1eb')}</div><h2>${T('s1h')}</h2></div><p>${T('s1p')}</p></div><div class="grid" id="pgrid">${pGrid()}</div>${posters.length>6?`<button class="more" id="pmore">${postersExpanded?T('lessP'):T('moreP')}</button>`:''}</section>
+ <section id="reviews"><div class="sh"><div><div class="eb y">${T('s2eb')}</div><h2>${T('s2h')}</h2></div><p>${T('s2p')}</p></div>${ft?`<div class="rvg"><a class="feat" href="#/film/${ft.film}"><div class="top"><span>${T('lastReview')}</span><b>${(+ft.r).toFixed(1)} / 5</b></div><h3>${esc(ft.t)}${ft.tg?`<em>${esc(ft.tg)}</em>`:''}</h3><p class="rev-clamp">${revHtml(ft.rv)}</p><span class="pill">${T('readReview')}</span></a><div>${rFirst.map(row).join('')}</div></div>${rExtra.length?`<div class="more-rev" id="rextra" style="${reviewsExpanded?'':'display:none'}">${rExtra.map(row).join('')}</div><button class="more" id="rmore">${reviewsExpanded?T('lessR'):T('moreR')}</button>`:''}`:`<p class="hint">${T('noReview')}</p>`}</section>
+ <section id="about" class="abt"><h2 class="big">${T('aboutT1')}<em>${T('aboutT2')}</em></h2><div class="tx"><div class="eb y">${T('s3eb')}</div><p>${T('aboutP1')}</p><p>${T('aboutP2')}</p><p><a href="https://www.instagram.com/flickthink_/" target="_blank" rel="noopener">${T('aboutLink')}</a></p></div></section>`;
+ const pm=$('#pmore');if(pm)pm.onclick=()=>{postersExpanded=!postersExpanded;$('#pgrid').innerHTML=pGrid();pm.textContent=postersExpanded?T('lessP'):T('moreP')};
+ const rm=$('#rmore');if(rm)rm.onclick=()=>{reviewsExpanded=!reviewsExpanded;$('#rextra').style.display=reviewsExpanded?'':'none';rm.textContent=reviewsExpanded?T('lessR'):T('moreR')};
 }
 function film(filmKey){
  const posters=db.posters.filter(p=>p.film===filmKey);
  if(!posters.length)return home();
  const t=posters[0].t,y=posters[0].y,rv=db.reviews[filmKey],cs=db.com[filmKey]||[];
  const gallery=posters.length>1?`<div class="pgal">${posters.map(p=>`<div>${art(p)}</div>`).join('')}</div>`:art(posters[0]);
- $('#app').innerHTML=`<article class="film"><div class="pos">${gallery}</div><div><a class="back" href="#reviews">Retour</a><h1>${esc(t)}</h1><div class="meta">${y||''}</div><div class="st big">${rv?stars(rv.r)+' '+(+rv.r).toFixed(1)+' / 5':''}</div><br>
- <div class="rev">${rv?rv.rv.split('\n').filter(Boolean).map(p=>`<p>${esc(p)}</p>`).join(''):'<p class="hint">La critique de ce film arrive bientôt.</p>'}</div>
- <div class="com"><h2>Commentaires (${cs.length})</h2><div class="box"><input id="cn" placeholder="Votre pseudo" maxlength="30"><textarea id="ct" placeholder="Votre avis sur le film" maxlength="500"></textarea><button class="btn" id="cs">Publier le commentaire</button></div><div id="cl">${cs.map(c=>`<div class="cm"><b>${esc(c.n)}</b><small>${esc(c.d)}</small><p>${esc(c.t)}</p></div>`).join('')}</div></div></div></article>`;
- $('#cs').onclick=()=>{const n=$('#cn').value.trim(),tx=$('#ct').value.trim();if(!n||!tx)return toast('Ajoutez un pseudo et un message');(db.com[filmKey]=db.com[filmKey]||[]).unshift({n,t:tx,d:new Date().toLocaleDateString('fr-FR')});save();film(filmKey);toast('Commentaire publié')};
+ $('#app').innerHTML=`<article class="film"><div class="pos">${gallery}</div><div><a class="back" href="#reviews">${T('back')}</a><h1>${esc(t)}</h1><div class="meta">${y||''}</div><div class="st big">${rv?stars(rv.r)+' '+(+rv.r).toFixed(1)+' / 5':''}</div><br>
+ <div class="rev">${rv?rv.rv.split('\n').filter(Boolean).map(p=>`<p>${esc(p)}</p>`).join(''):`<p class="hint">${T('comingSoon')}</p>`}</div>
+ <div class="com"><h2>${T('commentsT')(cs.length)}</h2><div class="box"><input id="cn" placeholder="${T('pseudo')}" maxlength="30"><textarea id="ct" placeholder="${T('yourMsg')}" maxlength="500"></textarea><button class="btn" id="cs">${T('publishC')}</button></div><div id="cl">${cs.map(c=>`<div class="cm"><b>${esc(c.n)}</b><small>${esc(c.d)}</small><p>${esc(c.t)}</p></div>`).join('')}</div></div></div></article>`;
+ $('#cs').onclick=()=>{const n=$('#cn').value.trim(),tx=$('#ct').value.trim();if(!n||!tx)return toast(T('needBoth'));(db.com[filmKey]=db.com[filmKey]||[]).unshift({n,t:tx,d:new Date().toLocaleDateString(LANG==='fr'?'fr-FR':'en-US')});save();film(filmKey);toast(T('published'))};
 }
 const STYLES=['Modèle cercle','Modèle diagonale','Modèle barres','Modèle carré'];
 function adminView(){
- if(!admin){$('#app').innerHTML=`<div class="adm"><div class="pan"><h2>Espace admin</h2><p class="hint">Aperçu : le mot de passe de démo est <b>flick</b>. Sur le vrai site, la connexion sera sécurisée côté serveur.</p><div class="box"><input id="pw" type="password" placeholder="Mot de passe"><button class="btn" id="go">Se connecter</button></div></div></div>`;
-  $('#go').onclick=()=>{if($('#pw').value==='flick'){admin=true;try{sessionStorage.setItem('fta','1')}catch(e){}adminView()}else toast('Mot de passe incorrect')};return}
+ if(!admin){$('#app').innerHTML=`<div class="adm"><div class="pan"><h2>${T('admGate')}</h2><p class="hint">${T('admHint')}</p><div class="box"><input id="pw" type="password" placeholder="${T('pwPh')}"><button class="btn" id="go">${T('login')}</button></div></div></div>`;
+  $('#go').onclick=()=>{if($('#pw').value==='flick'){admin=true;try{sessionStorage.setItem('fta','1')}catch(e){}adminView()}else toast(T('wrongPw'))};return}
  const fl=filmsList();
  $('#app').innerHTML=`<div class="adm">
  <div class="pan"><h2>${editPoster?'Modifier le poster':'Ajouter un poster'}</h2><div class="box">
@@ -209,7 +255,7 @@ function adminView(){
   <button class="btn" id="ra">${editReview?'Enregistrer les modifications':'Publier la critique'}</button>
   ${editReview?'<button class="btn ghost" id="rcancel">Annuler</button>':''}
  </div></div>
- <div class="pan"><h2>Posters publiés</h2>${db.posters.map(p=>`<div class="item"><span>${esc(p.t)}${p.y?' · '+esc(String(p.y)):''}</span><span><button class="btn ghost" data-editp="${p.id}">Modifier</button> <button class="btn ghost" data-delp="${p.id}">Supprimer</button></span></div>`).join('')||'<p class="hint">Aucun poster.</p>'}</div>
+ <div class="pan"><h2>Posters publiés</h2><p class="hint">Glissez un poster (icône ⠿) pour changer son ordre d'affichage sur la home page. Les flèches font la même chose, plus pratique sur mobile.</p><div class="plist" id="plist">${db.posters.map((p,i)=>`<div class="pitem" draggable="true" data-id="${p.id}"><span class="handle">⠿</span><div class="th2">${art(p)}</div><span>${esc(p.t)}${p.y?' · '+esc(String(p.y)):''}</span><span class="ord"><button class="iconbtn" data-up="${p.id}" ${i===0?'disabled':''} aria-label="Monter">↑</button><button class="iconbtn" data-down="${p.id}" ${i===db.posters.length-1?'disabled':''} aria-label="Descendre">↓</button><button class="btn ghost" data-editp="${p.id}">Modifier</button><button class="btn ghost" data-delp="${p.id}">Supprimer</button></span></div>`).join('')||'<p class="hint">Aucun poster.</p>'}</div></div>
  <div class="pan"><h2>Critiques publiées</h2>${reviewsList().map(r=>`<div class="item"><span>${esc(r.t)} · ${(+r.r).toFixed(1)}/5</span><span><button class="btn ghost" data-editr="${r.film}">Modifier</button> <button class="btn ghost" data-delr="${r.film}">Supprimer</button></span></div>`).join('')||'<p class="hint">Aucune critique.</p>'}</div>
  <div class="pan"><div class="item"><span class="hint">Les données de cet aperçu restent dans votre navigateur.</span><button class="btn ghost" id="lo">Se déconnecter</button></div></div>
  </div>`;
@@ -236,6 +282,22 @@ function adminView(){
  $('#rf').onchange=()=>{const ex=db.reviews[$('#rf').value];$('#rr').value=ex?ex.r:5;$('#rg').value=ex?ex.tg||'':'';$('#rt').value=ex?ex.rv:''};
  document.querySelectorAll('[data-editp]').forEach(b=>b.onclick=()=>{editPoster=db.posters.find(p=>p.id===b.dataset.editp);editReview=null;adminView();window.scrollTo(0,0)});
  document.querySelectorAll('[data-delp]').forEach(b=>b.onclick=()=>{db.posters=db.posters.filter(p=>p.id!==b.dataset.delp);save();toast('Poster supprimé');adminView()});
+ document.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>{const i=db.posters.findIndex(p=>p.id===b.dataset.up);if(i>0){[db.posters[i-1],db.posters[i]]=[db.posters[i],db.posters[i-1]];save();adminView()}});
+ document.querySelectorAll('[data-down]').forEach(b=>b.onclick=()=>{const i=db.posters.findIndex(p=>p.id===b.dataset.down);if(i>=0&&i<db.posters.length-1){[db.posters[i+1],db.posters[i]]=[db.posters[i],db.posters[i+1]];save();adminView()}});
+ let dragId=null;
+ document.querySelectorAll('.pitem').forEach(el=>{
+  el.addEventListener('dragstart',()=>{dragId=el.dataset.id;el.classList.add('drag')});
+  el.addEventListener('dragend',()=>{el.classList.remove('drag');document.querySelectorAll('.pitem').forEach(x=>x.classList.remove('over'))});
+  el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('over')});
+  el.addEventListener('dragleave',()=>el.classList.remove('over'));
+  el.addEventListener('drop',e=>{
+   e.preventDefault();el.classList.remove('over');
+   const from=db.posters.findIndex(p=>p.id===dragId),to=db.posters.findIndex(p=>p.id===el.dataset.id);
+   if(from<0||to<0||from===to)return;
+   const [mv]=db.posters.splice(from,1);db.posters.splice(to,0,mv);
+   save();adminView();
+  });
+ });
  document.querySelectorAll('[data-editr]').forEach(b=>b.onclick=()=>{const film=b.dataset.editr;editReview={film,...db.reviews[film]};editPoster=null;adminView();window.scrollTo(0,0)});
  document.querySelectorAll('[data-delr]').forEach(b=>b.onclick=()=>{delete db.reviews[b.dataset.delr];save();toast('Critique supprimée');adminView()});
  $('#lo').onclick=()=>{admin=false;try{sessionStorage.removeItem('fta')}catch(e){}location.hash='#/'};
@@ -243,15 +305,15 @@ function adminView(){
 function shrink(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,700/i.width),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.82))};i.src=r.result};r.readAsDataURL(file)})}
 function route(){
  const h=location.hash;window.scrollTo(0,0);
- $('#na').classList.toggle('on',h==='#/admin');
  if(h==='#/admin')adminView();else if(h.startsWith('#/film/'))film(h.slice(7));
  else if(['#posters','#reviews','#about'].includes(h)){if(!$('#posters'))home();setTimeout(()=>$(h).scrollIntoView({behavior:'smooth'}),30)}
  else home();
 }
+$('#langBtn').onclick=()=>{LANG=LANG==='fr'?'en':'fr';try{localStorage.setItem('ftlang',LANG)}catch(e){}applyChrome();route()};
+applyChrome();
 addEventListener('hashchange',route);route();
 document.addEventListener('pointermove',e=>{const c=e.target.closest&&e.target.closest('.card');if(!c)return;const r=c.getBoundingClientRect();c.style.setProperty('--ry',((e.clientX-r.left)/r.width-.5)*10+'deg');c.style.setProperty('--rx',(.5-(e.clientY-r.top)/r.height)*10+'deg')});
 document.addEventListener('pointerout',e=>{const c=e.target.closest&&e.target.closest('.card');if(c){c.style.setProperty('--rx','0deg');c.style.setProperty('--ry','0deg')}});
-addEventListener('scroll',()=>{const h=$('#h1');if(h){const y=Math.min(scrollY,700);h.style.transform=`translateY(${y*.25}px) scale(${1-y/3500})`;h.style.opacity=1-y/800}},{passive:true});
 </script>
 </body>
 </html>
