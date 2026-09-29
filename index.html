@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FlickThink — Posters & critiques</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Montserrat:wght@900&display=swap" rel="stylesheet">
+<style>
+:root{--y:#F6C844;--c:#EDEDE6;--k:#000;--g:#161614;--m:#8d8d85;--d:'Inter','Helvetica Neue',Arial,sans-serif;--b:'Inter','Helvetica Neue',Arial,sans-serif;--lg:'Montserrat','Arial Black',sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+*,*:before,*:after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;background:var(--k);color:var(--c);font-family:var(--b);font-size:17px;line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--y);outline-offset:3px}
+nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px 5vw;background:rgba(0,0,0,.6);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px)}
+.logo{font-family:var(--lg);font-weight:900;font-size:22px;letter-spacing:-.04em}.logo b{color:var(--y)}.logo i{display:inline-block;width:.24em;height:.24em;background:var(--y);border-radius:50%;margin-left:.15em}
+nav div{display:flex;gap:26px;font-weight:500;font-size:15px}nav div a{opacity:.7;transition:opacity .3s}nav div a:hover,nav div a.on{opacity:1}
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:130px 5vw 70px;position:relative;background:radial-gradient(ellipse 45% 50% at 72% 55%,rgba(246,200,68,.16),transparent 70%)}
+.eb{display:flex;align-items:center;gap:16px;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--m)}
+.eb:before{content:"";width:50px;height:2px;background:var(--y)}
+.eb.y{color:var(--y)}.eb.y:before{display:none}
+.hero h1{font-weight:800;font-size:clamp(52px,10vw,150px);line-height:.96;letter-spacing:-.06em;margin:34px 0 0;will-change:transform}
+.hero h1 span{display:block;overflow:hidden;padding:0 .04em .16em}
+.hero h1 span i{display:block;font-style:normal;animation:rise 1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--n)*.16s + .25s)}
+.hero h1 span:last-child i{color:var(--y)}
+@keyframes rise{from{transform:translateY(105%)}to{transform:none}}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.hero p{max-width:44ch;font-size:clamp(17px,1.6vw,21px);color:var(--m);margin:44px 0 0;opacity:0;animation:up .9s ease 1.3s forwards}
+.hero p b{color:var(--c);font-weight:500}
+.cta{display:inline-block;background:var(--y);color:var(--k);font-weight:700;padding:14px 28px;border-radius:99px;transition:transform .3s}.cta:hover{transform:scale(1.05)}
+.hero .cta{align-self:flex-start;margin-top:28px;opacity:0;animation:up .9s ease 1.5s forwards}
+section{padding:90px 5vw}
+h2{font-family:var(--d);font-weight:800;font-size:clamp(34px,5vw,64px);letter-spacing:-.04em;line-height:1;margin:0 0 12px}
+.sub{color:var(--m);margin:0 0 44px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{display:block;position:relative;border-radius:6px;overflow:hidden;transform:perspective(900px) rotateX(var(--rx,0)) rotateY(var(--ry,0));transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;animation:up .8s ease both;animation-delay:calc(var(--i)*70ms + 2s);background:var(--g);cursor:pointer}
+.more{display:block;margin:34px auto 0;background:none;border:1.5px solid #333;color:var(--c);padding:14px 30px;border-radius:99px;font-weight:700;cursor:pointer;transition:.3s}
+.more:hover{border-color:var(--y);color:var(--y)}
+.pgal{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.card:hover{box-shadow:0 30px 60px -20px rgba(246,200,68,.35);z-index:2}
+.card svg,.card img{display:block;width:100%;height:auto}
+.card .cap{position:absolute;inset:auto 0 0;padding:40px 16px 14px;background:linear-gradient(transparent,rgba(0,0,0,.85));opacity:0;transition:opacity .35s;font-weight:700;font-size:15px}
+.card:hover .cap,.card:focus-visible .cap{opacity:1}.cap small{display:block;color:var(--y);font-weight:500}
+.row{display:grid;grid-template-columns:84px 1fr auto;gap:24px;align-items:center;padding:22px 0;border-top:1px solid #262622;transition:padding .35s}
+.row:last-child{border-bottom:1px solid #262622}
+.row:hover{padding-left:14px}.row:hover h3{color:var(--y)}
+.row .th{border-radius:6px;overflow:hidden}.row .th svg,.row .th img{display:block;width:100%;height:auto}
+.row h3{margin:0;font-weight:700;font-size:clamp(19px,2vw,26px);letter-spacing:-.02em;transition:color .3s}
+.row p{margin:2px 0 0;font-size:15px;color:var(--m)}
+.st{color:var(--y);font-weight:700;white-space:nowrap}
+.film{padding:110px 5vw 60px;display:grid;grid-template-columns:minmax(240px,420px) 1fr;gap:clamp(30px,6vw,90px);align-items:start;animation:up .7s ease both}
+.film .pos{position:sticky;top:90px;border-radius:8px;overflow:hidden;box-shadow:0 40px 80px -30px rgba(246,200,68,.4)}
+.film .pos svg,.film .pos img{display:block;width:100%;height:auto}
+.film h1{font-family:var(--d);font-weight:900;font-size:clamp(40px,7vw,96px);letter-spacing:-.05em;line-height:.9;margin:0 0 14px}
+.film .meta{color:var(--m);margin-bottom:8px}.film .big{font-size:30px}
+.rev{max-width:62ch;font-size:19px}.rev p{margin:0 0 1.1em}
+.back{display:inline-block;margin-bottom:26px;color:var(--y);font-weight:500}
+.com{margin-top:60px;max-width:62ch}.com h2{font-size:34px}
+.box{display:grid;gap:10px;margin:22px 0 30px}
+input,select,textarea{background:var(--g);border:1.5px solid #2c2c28;border-radius:12px;padding:13px 16px;width:100%;transition:border-color .25s}
+input:focus,select:focus,textarea:focus{border-color:var(--y);outline:none}
+textarea{min-height:110px;resize:vertical}
+.btn{background:var(--y);color:var(--k);border:0;border-radius:99px;padding:13px 26px;font-weight:700;cursor:pointer;justify-self:start;transition:transform .25s}.btn:hover{transform:scale(1.05)}
+.btn.ghost{background:none;color:var(--m);border:1.5px solid #333;padding:7px 16px;font-weight:500}
+.cm{border-left:3px solid var(--y);padding:4px 0 4px 18px;margin:0 0 22px;animation:up .5s ease both}
+.cm b{font-weight:700}.cm small{color:var(--m);margin-left:8px}.cm p{margin:4px 0 0}
+.adm{padding:120px 5vw 60px;max-width:1100px;margin:0 auto;display:grid;gap:44px;animation:up .6s ease both}
+.pan{background:var(--g);border-radius:20px;padding:28px}.pan h2{font-size:30px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid #2c2c28}
+.hint{color:var(--m);font-size:14px}
+h2{font-weight:800;font-size:clamp(56px,9vw,150px);letter-spacing:-.075em;line-height:.9;margin:14px 0 0}
+.sh{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:56px}
+.sh p{margin:0 0 14px;color:var(--m);max-width:30ch;text-align:right}
+.mq{border-block:1px solid #262622;overflow:hidden;white-space:nowrap;padding:22px 0}
+.mq div{display:inline-flex;gap:56px;padding-right:56px;animation:mq 38s linear infinite;font-size:14px;letter-spacing:.24em;text-transform:uppercase;color:var(--m)}
+.mq:hover div{animation-play-state:paused}.mq b{color:var(--y);font-weight:400}
+@keyframes mq{to{transform:translateX(-50%)}}
+.rvg{display:grid;grid-template-columns:1.15fr 1fr;gap:44px;align-items:stretch}
+.feat{display:flex;flex-direction:column;padding:42px;border:1px solid #262622;background:radial-gradient(ellipse 60% 45% at 85% 100%,rgba(246,200,68,.2),transparent 70%),#0a0a09;transition:border-color .4s}
+.rev-clamp{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;line-clamp:5;overflow:hidden}
+.more-rev{display:grid;gap:0;margin-top:22px}
+.feat:hover{border-color:var(--y)}
+.feat .top{display:flex;justify-content:space-between;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--m)}.feat .top b{color:var(--y)}
+.feat h3{margin:auto 0 0;font-weight:800;font-size:clamp(46px,6.5vw,100px);line-height:.9;letter-spacing:-.07em}.feat h3 em{display:block;font-style:normal;color:var(--y)}
+.feat p{color:var(--m);max-width:52ch;margin:26px 0 30px}
+.feat p.rev-clamp{margin-bottom:30px}
+.pill{align-self:flex-start;border:1px solid #333;border-radius:99px;padding:12px 24px;transition:background .3s,color .3s,border-color .3s}
+.feat:hover .pill{background:var(--y);color:var(--k);border-color:var(--y)}
+nav .pill{padding:8px 20px;background:#121211;font-size:15px}nav .pill:hover,nav .pill.on{border-color:var(--y)}
+.abt{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;padding-block:130px}
+.abt .big{font-size:clamp(64px,10vw,150px);line-height:.85;letter-spacing:-.08em;margin:0}.abt .big em{display:block;font-style:normal;color:var(--y)}
+.abt .tx .eb{margin-bottom:22px}.abt .tx p{color:var(--m);max-width:52ch}.abt .tx a{color:var(--y);font-weight:700}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}.rvg,.abt{grid-template-columns:1fr}.sh{flex-direction:column;align-items:flex-start;gap:14px}.sh p{text-align:left}.feat{padding:26px}}
+@media(max-width:480px){.grid{grid-template-columns:1fr}}
+@media(max-width:560px){nav div a:nth-child(3){display:none}.logo{font-size:18px}}
+footer{padding:50px 5vw;color:var(--m);font-size:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer a{color:var(--y)}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--y);color:var(--k);padding:12px 24px;border-radius:99px;font-weight:700;opacity:0;pointer-events:none;transition:.4s;z-index:30}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:760px){.film{grid-template-columns:1fr}.film .pos{position:static;max-width:320px}.row{grid-template-columns:64px 1fr}.row .st{grid-column:2}.row .th{width:64px}.two{grid-template-columns:1fr}nav div{gap:16px;font-size:14px}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-delay:0s!important;transition:none!important}}
+</style>
+</head>
+<body>
+<nav><a class="logo" href="#/" aria-label="Accueil FlickThink">Flick <b>Think</b><i></i></a><div><a href="#posters">Posters</a><a href="#reviews">Reviews</a><a href="#about">À propos</a></div><a class="pill" href="#/admin" id="na">Admin</a></nav>
+<main id="app"></main>
+<footer><span>© FlickThink — posters & critiques de cinéma</span><a href="https://www.instagram.com/flickthink_/" target="_blank" rel="noopener">@flickthink_ sur Instagram</a></footer>
+<div id="toast" role="status"></div>
+<script>
+const SEED_POSTERS=[
+{id:'p1',film:'blade-runner-2049',t:'Blade Runner 2049',y:2017,k:0,c:['#F6C844','#000']},
+{id:'p2',film:'drive',t:'Drive',y:2011,k:1,c:['#F6C844','#000']},
+{id:'p3',film:'parasite',t:'Parasite',y:2019,k:2,c:['#F6C844','#000']},
+{id:'p4',film:'whiplash',t:'Whiplash',y:2014,k:3,c:['#F6C844','#000']},
+{id:'p5',film:'interstellar',t:'Interstellar',y:2014,k:0,c:['#EDEDE6','#000']},
+{id:'p6',film:'fight-club',t:'Fight Club',y:1999,k:2,c:['#000','#F6C844']},
+{id:'p7',film:'fight-club',t:'Fight Club',y:1999,k:1,c:['#F6C844','#000']},
+{id:'p8',film:'dune-part-two',t:'Dune : Part Two',y:2024,k:0,c:['#F6C844','#000']}
+];
+const SEED_REVIEWS={
+'blade-runner-2049':{tg:"Le silence en néon.",r:4.5,rd:6,rv:"Villeneuve prend le temps de faire respirer chaque plan, et c'est là que le film devient hypnotique. La lumière orange de Las Vegas est l'un des plus beaux moments de cinéma de la décennie.\n\nOn peut lui reprocher sa longueur, mais elle sert le propos : la solitude de K se ressent à chaque silence."},
+'drive':{tg:"La nuit, en accéléré.",r:4,rd:5,rv:"Un film de néons, de silences et de violence soudaine. Ryan Gosling dit presque tout avec son regard, et la bande-son fait le reste.\n\nLe scénario est mince, mais le style est si assumé qu'on lui pardonne tout."},
+'parasite':{tg:"Monter, descendre.",r:5,rd:4,rv:"Bong Joon-ho passe de la comédie au thriller puis à la tragédie sans jamais perdre le spectateur. La mise en scène des escaliers raconte à elle seule la lutte des classes.\n\nUn film qu'on peut revoir dix fois en découvrant un détail à chaque fois."},
+'whiplash':{tg:"Le tempo avant tout.",r:4.5,rd:3,rv:"Cent minutes de tension pure, montées comme un morceau de jazz. Le duel entre Teller et Simmons est d'une intensité rare.\n\nLa dernière scène est un modèle de montage."},
+'interstellar':{tg:"L'émotion au-delà des étoiles.",r:4,rd:2,rv:"Nolan fait le pari de l'émotion au milieu de la science, et ça marche surtout quand il ose la simplicité. L'orgue de Zimmer porte la scène du quai d'arrimage.\n\nLe troisième acte divise, mais l'ambition force le respect."},
+'fight-club':{tg:"Le chaos en règle.",r:4.5,rd:1,rv:"Fincher signe un pamphlet nerveux, drôle et toujours aussi mordant. Le twist n'est que la moitié de l'histoire : c'est le rythme qui fait le film.\n\nUn classique qui n'a pas pris une ride."}
+};
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const slug=t=>String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+let db;try{db=JSON.parse(localStorage.getItem('ft4'))}catch(e){}
+if(!db||!db.posters)db={posters:SEED_POSTERS,reviews:SEED_REVIEWS,com:{}};
+const save=()=>{try{localStorage.setItem('ft4',JSON.stringify(db))}catch(e){toast('Stockage plein : image trop lourde')}};
+let admin=false;try{admin=sessionStorage.getItem('fta')==='1'}catch(e){}
+let editPoster=null,editReview=null,postersExpanded=false,reviewsExpanded=false;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2400)}
+const stars=r=>'★'.repeat(Math.floor(r))+(r%1?'½':'');
+const revHtml=rv=>rv.split('\n').filter(Boolean).map(esc).join('<br><br>');
+function art(f){
+ if(f.img)return `<img src="${f.img}" alt="Poster ${esc(f.t)}">`;
+ const [a,b]=f.c||['#F6C844','#000'],cr='#EDEDE6',k=(f.k||0)%4;
+ const L=esc(f.t).toUpperCase().split(' ').reduce((r,w)=>{const l=r[r.length-1];if(l&&(l+' '+w).length<=11)r[r.length-1]=l+' '+w;else r.push(w);return r},[]);
+ let bg=a,sh='',tc=b;
+ if(k==0)sh=`<circle cx="150" cy="170" r="110" fill="${b}"/><circle cx="150" cy="170" r="60" fill="${cr}" opacity=".9"/>`;
+ if(k==1){bg=b;tc=cr;sh=`<polygon points="0,0 300,0 0,320" fill="${a}"/>`}
+ if(k==2){bg=cr;tc=b;sh=[0,1,2,3,4].map(i=>`<rect x="30" y="${40+i*36}" width="${240-i*44}" height="22" fill="${i==2?a:b}"/>`).join('')}
+ if(k==3)sh=`<rect x="40" y="40" width="220" height="220" fill="${b}"/><rect x="90" y="90" width="120" height="120" fill="${a}"/>`;
+ if(f.c&&f.c[0]==='#000'&&k==2){bg='#000';tc=cr}
+ const y0=410-(L.length-1)*34;
+ return `<svg viewBox="0 0 300 450" role="img" aria-label="Poster ${esc(f.t)}"><rect width="300" height="450" fill="${bg}"/>${sh}<text font-family="Montserrat,Arial Black,sans-serif" font-weight="900" font-size="32" letter-spacing="-1.5" fill="${tc}">${L.map((l,i)=>`<tspan x="24" y="${y0+i*34}">${l}</tspan>`).join('')}</text><text x="24" y="434" font-family="Montserrat,sans-serif" font-weight="500" font-size="11" fill="${tc}" opacity=".7">${f.y||''} · FLICKTHINK</text></svg>`;
+}
+function filmsList(){
+ const map=new Map();
+ db.posters.forEach(p=>{if(!map.has(p.film))map.set(p.film,{film:p.film,t:p.t,y:p.y});});
+ return [...map.values()];
+}
+function reviewsList(){
+ const fm=filmsList();
+ return Object.keys(db.reviews).map(k=>{const info=fm.find(f=>f.film===k)||{t:k,y:''};return {film:k,t:info.t,y:info.y,...db.reviews[k]}}).sort((a,b)=>(b.rd||0)-(a.rd||0));
+}
+const card=(p,i)=>{const rv=db.reviews[p.film];return `<a class="card" href="#/film/${p.film}" style="--i:${i}"><div>${art(p)}</div><div class="cap">${esc(p.t)}<small>${p.y||''}${rv?' · '+stars(rv.r):''}</small></div></a>`};
+const row=r=>{const th=db.posters.find(p=>p.film===r.film)||{t:r.t,k:0,c:['#F6C844','#000']};return `<a class="row" href="#/film/${r.film}"><div class="th">${art(th)}</div><div><h3>${esc(r.t)}</h3><p>${r.y||''}${r.tg?' · '+esc(r.tg):''}</p></div><span class="st">${stars(r.r)}</span></a>`};
+function home(){
+ const posters=db.posters,revs=reviewsList(),ft=revs[0],others=revs.slice(1);
+ const mq=['Cinema & Design','Reviews','Posters','FlickThink',...(ft?['Nouvelle review : '+ft.t]:[]),posters.length+' posters en ligne'];
+ const mi=mq.map(x=>`<span>${esc(x)}</span><b>•</b>`).join('');
+ const pGrid=()=>{const list=postersExpanded?posters:posters.slice(0,6);return list.map(card).join('')||'<p class="hint">Aucun poster pour le moment.</p>'};
+ const rFirst=others.slice(0,4),rExtra=others.slice(4);
+ $('#app').innerHTML=`<header class="hero"><div class="eb">Independent Critic and Designer</div><h1 id="h1"><span><i style="--n:0">Watch closely.</i></span><span><i style="--n:1">Think deeper.</i></span></h1><p>Des <b>posters</b> dessinés à la main et des <b>critiques</b> écrites sans détour.</p><a class="cta" href="#posters">Voir les posters</a></header>
+ <div class="mq" aria-hidden="true"><div>${mi+mi}</div></div>
+ <section id="posters"><div class="sh"><div><div class="eb y">01 / Visual archive</div><h2>Posters</h2></div><p>Affiches originales en jaune, noir et crème. Touchez un poster pour lire la critique.</p></div><div class="grid" id="pgrid">${pGrid()}</div>${posters.length>6?`<button class="more" id="pmore">${postersExpanded?'Voir moins':'Découvrir plus de posters'}</button>`:''}</section>
+ <section id="reviews"><div class="sh"><div><div class="eb y">02 / Editorial</div><h2>Reviews</h2></div><p>Critiques, idées & cinéma.</p></div>${ft?`<div class="rvg"><a class="feat" href="#/film/${ft.film}"><div class="top"><span>Dernière review</span><b>${(+ft.r).toFixed(1)} / 5</b></div><h3>${esc(ft.t)}${ft.tg?`<em>${esc(ft.tg)}</em>`:''}</h3><p class="rev-clamp">${revHtml(ft.rv)}</p><span class="pill">Lire la review →</span></a><div>${rFirst.map(row).join('')}</div></div>${rExtra.length?`<div class="more-rev" id="rextra" style="${reviewsExpanded?'':'display:none'}">${rExtra.map(row).join('')}</div><button class="more" id="rmore">${reviewsExpanded?'Voir moins':'Voir plus de critiques'}</button>`:''}`:'<p class="hint">Aucune review publiée.</p>'}</section>
+ <section id="about" class="abt"><h2 class="big">Think<em>different.</em></h2><div class="tx"><div class="eb y">03 / FlickThink</div><p>FlickThink transforme un compte cinéma en véritable objet éditorial. Je dessine des posters et j'écris des critiques : un endroit où l'image, la typographie et le texte ont la même importance.</p><p>Le site accueille progressivement une bibliothèque de films, des discussions communautaires et de nouvelles séries de posters.</p><p><a href="https://www.instagram.com/flickthink_/" target="_blank" rel="noopener">Suivre @flickthink_ sur Instagram</a></p></div></section>`;
+ const pm=$('#pmore');if(pm)pm.onclick=()=>{postersExpanded=!postersExpanded;$('#pgrid').innerHTML=pGrid();pm.textContent=postersExpanded?'Voir moins':'Découvrir plus de posters'};
+ const rm=$('#rmore');if(rm)rm.onclick=()=>{reviewsExpanded=!reviewsExpanded;$('#rextra').style.display=reviewsExpanded?'':'none';rm.textContent=reviewsExpanded?'Voir moins':'Voir plus de critiques'};
+}
+function film(filmKey){
+ const posters=db.posters.filter(p=>p.film===filmKey);
+ if(!posters.length)return home();
+ const t=posters[0].t,y=posters[0].y,rv=db.reviews[filmKey],cs=db.com[filmKey]||[];
+ const gallery=posters.length>1?`<div class="pgal">${posters.map(p=>`<div>${art(p)}</div>`).join('')}</div>`:art(posters[0]);
+ $('#app').innerHTML=`<article class="film"><div class="pos">${gallery}</div><div><a class="back" href="#reviews">Retour</a><h1>${esc(t)}</h1><div class="meta">${y||''}</div><div class="st big">${rv?stars(rv.r)+' '+(+rv.r).toFixed(1)+' / 5':''}</div><br>
+ <div class="rev">${rv?rv.rv.split('\n').filter(Boolean).map(p=>`<p>${esc(p)}</p>`).join(''):'<p class="hint">La critique de ce film arrive bientôt.</p>'}</div>
+ <div class="com"><h2>Commentaires (${cs.length})</h2><div class="box"><input id="cn" placeholder="Votre pseudo" maxlength="30"><textarea id="ct" placeholder="Votre avis sur le film" maxlength="500"></textarea><button class="btn" id="cs">Publier le commentaire</button></div><div id="cl">${cs.map(c=>`<div class="cm"><b>${esc(c.n)}</b><small>${esc(c.d)}</small><p>${esc(c.t)}</p></div>`).join('')}</div></div></div></article>`;
+ $('#cs').onclick=()=>{const n=$('#cn').value.trim(),tx=$('#ct').value.trim();if(!n||!tx)return toast('Ajoutez un pseudo et un message');(db.com[filmKey]=db.com[filmKey]||[]).unshift({n,t:tx,d:new Date().toLocaleDateString('fr-FR')});save();film(filmKey);toast('Commentaire publié')};
+}
+const STYLES=['Modèle cercle','Modèle diagonale','Modèle barres','Modèle carré'];
+function adminView(){
+ if(!admin){$('#app').innerHTML=`<div class="adm"><div class="pan"><h2>Espace admin</h2><p class="hint">Aperçu : le mot de passe de démo est <b>flick</b>. Sur le vrai site, la connexion sera sécurisée côté serveur.</p><div class="box"><input id="pw" type="password" placeholder="Mot de passe"><button class="btn" id="go">Se connecter</button></div></div></div>`;
+  $('#go').onclick=()=>{if($('#pw').value==='flick'){admin=true;try{sessionStorage.setItem('fta','1')}catch(e){}adminView()}else toast('Mot de passe incorrect')};return}
+ const fl=filmsList();
+ $('#app').innerHTML=`<div class="adm">
+ <div class="pan"><h2>${editPoster?'Modifier le poster':'Ajouter un poster'}</h2><div class="box">
+  <input id="pt" placeholder="Titre du film" value="${editPoster?esc(editPoster.t):''}">
+  <div class="two"><input id="py" type="number" placeholder="Année" value="${editPoster?esc(editPoster.y||''):''}"><select id="pk">${STYLES.map((s,i)=>`<option value="${i}" ${editPoster&&+editPoster.k===i?'selected':''}>${s}</option>`).join('')}</select></div>
+  <input id="pf" type="file" accept="image/*">
+  <p class="hint">${editPoster?'Laissez le champ image vide pour garder l’image actuelle.':'Sans image, un poster typographique est généré automatiquement.'}</p>
+  <p class="hint">Si le titre correspond à un film déjà publié, ce poster viendra s'ajouter aux siens (même critique).</p>
+  <button class="btn" id="pa">${editPoster?'Enregistrer les modifications':'Publier le poster'}</button>
+  ${editPoster?'<button class="btn ghost" id="pcancel">Annuler</button>':''}
+ </div></div>
+ <div class="pan"><h2>${editReview?'Modifier la critique':'Rédiger une critique'}</h2><div class="box">
+  <select id="rf">${fl.map(f=>`<option value="${f.film}" ${editReview&&editReview.film===f.film?'selected':''}>${esc(f.t)}${db.reviews[f.film]?' (déjà publiée)':''}</option>`).join('')||"<option value=''>Ajoutez d'abord un poster</option>"}</select>
+  <select id="rr">${[5,4.5,4,3.5,3,2.5,2,1.5,1,.5].map(r=>`<option value="${r}" ${editReview&&+editReview.r===r?'selected':''}>${stars(r)} (${r}/5)</option>`).join('')}</select>
+  <input id="rg" placeholder="Accroche en jaune (ex. Le silence en néon.)" maxlength="40" value="${editReview?esc(editReview.tg||''):''}">
+  <textarea id="rt" style="min-height:220px" placeholder="Votre critique. Une ligne vide sépare les paragraphes.">${editReview?esc(editReview.rv):''}</textarea>
+  <button class="btn" id="ra">${editReview?'Enregistrer les modifications':'Publier la critique'}</button>
+  ${editReview?'<button class="btn ghost" id="rcancel">Annuler</button>':''}
+ </div></div>
+ <div class="pan"><h2>Posters publiés</h2>${db.posters.map(p=>`<div class="item"><span>${esc(p.t)}${p.y?' · '+esc(String(p.y)):''}</span><span><button class="btn ghost" data-editp="${p.id}">Modifier</button> <button class="btn ghost" data-delp="${p.id}">Supprimer</button></span></div>`).join('')||'<p class="hint">Aucun poster.</p>'}</div>
+ <div class="pan"><h2>Critiques publiées</h2>${reviewsList().map(r=>`<div class="item"><span>${esc(r.t)} · ${(+r.r).toFixed(1)}/5</span><span><button class="btn ghost" data-editr="${r.film}">Modifier</button> <button class="btn ghost" data-delr="${r.film}">Supprimer</button></span></div>`).join('')||'<p class="hint">Aucune critique.</p>'}</div>
+ <div class="pan"><div class="item"><span class="hint">Les données de cet aperçu restent dans votre navigateur.</span><button class="btn ghost" id="lo">Se déconnecter</button></div></div>
+ </div>`;
+ $('#pa').onclick=async()=>{
+  const t=$('#pt').value.trim();if(!t)return toast('Ajoutez un titre');
+  const film=slug(t),k=+$('#pk').value,y=$('#py').value;
+  const file=$('#pf').files[0];
+  let img=editPoster?editPoster.img:undefined;
+  if(file)img=await shrink(file);
+  if(editPoster){Object.assign(editPoster,{t,y,k,film,img});toast('Poster modifié')}
+  else{db.posters.unshift({id:'p'+Date.now(),film,t,y,k,c:['#F6C844','#000'],img});toast('Poster publié')}
+  save();editPoster=null;adminView();
+ };
+ const pcancel=$('#pcancel');if(pcancel)pcancel.onclick=()=>{editPoster=null;adminView()};
+ $('#ra').onclick=()=>{
+  const film=$('#rf').value,t=$('#rt').value.trim();
+  if(!film)return toast("Ajoutez d'abord un poster pour ce film");
+  if(!t)return toast('Écrivez votre critique');
+  const prev=db.reviews[film];
+  db.reviews[film]={tg:$('#rg').value.trim(),r:+$('#rr').value,rv:t,rd:prev?prev.rd:Date.now()};
+  save();toast(editReview?'Critique mise à jour':'Critique publiée');editReview=null;location.hash='#/film/'+film;
+ };
+ const rcancel=$('#rcancel');if(rcancel)rcancel.onclick=()=>{editReview=null;adminView()};
+ $('#rf').onchange=()=>{const ex=db.reviews[$('#rf').value];$('#rr').value=ex?ex.r:5;$('#rg').value=ex?ex.tg||'':'';$('#rt').value=ex?ex.rv:''};
+ document.querySelectorAll('[data-editp]').forEach(b=>b.onclick=()=>{editPoster=db.posters.find(p=>p.id===b.dataset.editp);editReview=null;adminView();window.scrollTo(0,0)});
+ document.querySelectorAll('[data-delp]').forEach(b=>b.onclick=()=>{db.posters=db.posters.filter(p=>p.id!==b.dataset.delp);save();toast('Poster supprimé');adminView()});
+ document.querySelectorAll('[data-editr]').forEach(b=>b.onclick=()=>{const film=b.dataset.editr;editReview={film,...db.reviews[film]};editPoster=null;adminView();window.scrollTo(0,0)});
+ document.querySelectorAll('[data-delr]').forEach(b=>b.onclick=()=>{delete db.reviews[b.dataset.delr];save();toast('Critique supprimée');adminView()});
+ $('#lo').onclick=()=>{admin=false;try{sessionStorage.removeItem('fta')}catch(e){}location.hash='#/'};
+}
+function shrink(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,700/i.width),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.82))};i.src=r.result};r.readAsDataURL(file)})}
+function route(){
+ const h=location.hash;window.scrollTo(0,0);
+ $('#na').classList.toggle('on',h==='#/admin');
+ if(h==='#/admin')adminView();else if(h.startsWith('#/film/'))film(h.slice(7));
+ else if(['#posters','#reviews','#about'].includes(h)){if(!$('#posters'))home();setTimeout(()=>$(h).scrollIntoView({behavior:'smooth'}),30)}
+ else home();
+}
+addEventListener('hashchange',route);route();
+document.addEventListener('pointermove',e=>{const c=e.target.closest&&e.target.closest('.card');if(!c)return;const r=c.getBoundingClientRect();c.style.setProperty('--ry',((e.clientX-r.left)/r.width-.5)*10+'deg');c.style.setProperty('--rx',(.5-(e.clientY-r.top)/r.height)*10+'deg')});
+document.addEventListener('pointerout',e=>{const c=e.target.closest&&e.target.closest('.card');if(c){c.style.setProperty('--rx','0deg');c.style.setProperty('--ry','0deg')}});
+addEventListener('scroll',()=>{const h=$('#h1');if(h){const y=Math.min(scrollY,700);h.style.transform=`translateY(${y*.25}px) scale(${1-y/3500})`;h.style.opacity=1-y/800}},{passive:true});
+</script>
+</body>
+</html>
