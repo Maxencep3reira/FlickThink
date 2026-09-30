@@ -70,6 +70,8 @@ textarea{min-height:110px;resize:vertical}
 .pan{background:var(--g);border-radius:20px;padding:28px}.pan h2{font-size:30px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid #2c2c28}
+.citem{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:10px 0;border-top:1px solid #2c2c28}
+.citem .txt{color:var(--m);font-size:14px;margin-top:4px}
 .plist{display:grid}
 .pitem{display:grid;grid-template-columns:22px 48px 1fr auto;gap:14px;align-items:center;padding:9px 0;border-top:1px solid #2c2c28;cursor:grab;transition:background .2s,opacity .2s}
 .pitem.drag{opacity:.35}
@@ -94,7 +96,7 @@ h2{font-weight:800;font-size:clamp(56px,9vw,150px);letter-spacing:-.075em;line-h
 .more-rev{display:grid;gap:0;margin-top:22px}
 .feat:hover{border-color:var(--y)}
 .feat .top{display:flex;justify-content:space-between;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--m)}.feat .top b{color:var(--y)}
-.feat h3{margin:auto 0 0;font-weight:800;font-size:clamp(46px,6.5vw,100px);line-height:.9;letter-spacing:-.07em}.feat h3 em{display:block;font-style:normal;color:var(--y)}
+.feat h3{margin:auto 0 0;font-weight:800;font-size:clamp(46px,6.5vw,100px);line-height:.9;letter-spacing:-.07em}.feat h3 em{display:block;font-style:normal;color:var(--y);font-size:clamp(18px,2.6vw,30px);font-weight:700;letter-spacing:-.02em;margin-top:6px}
 .feat p{color:var(--m);max-width:52ch;margin:26px 0 30px}
 .feat p.rev-clamp{margin-bottom:30px}
 .pill{align-self:flex-start;border:1px solid #333;border-radius:99px;padding:12px 24px;transition:background .3s,color .3s,border-color .3s}
@@ -108,7 +110,7 @@ nav .pill{padding:8px 20px;background:#121211;font-size:15px}nav .pill:hover,nav
 @media(max-width:560px){nav div a:nth-child(3){display:none}.logo{font-size:18px}}
 footer{padding:50px 5vw;color:var(--m);font-size:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 footer a{color:var(--y)}
-#langBtn{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:25;background:#121211;border:1px solid #333;color:var(--c);padding:10px 16px;border-radius:99px;font-weight:700;font-size:13px;cursor:pointer;transition:.3s}
+#langBtn{position:fixed;right:18px;top:calc(78px + env(safe-area-inset-top,0px));z-index:19;background:#121211;border:1px solid #333;color:var(--c);padding:9px 15px;border-radius:99px;font-weight:700;font-size:13px;cursor:pointer;transition:.3s}
 #langBtn:hover{border-color:var(--y);color:var(--y)}
 .adm-link{opacity:.3;font-size:12px;margin-left:auto}
 .adm-link:hover{opacity:.8}
@@ -148,7 +150,7 @@ const slug=t=>String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/
 let LANG='fr';try{LANG=localStorage.getItem('ftlang')||'fr'}catch(e){}
 const I18N={
  fr:{posters:'Posters',critiques:'Critiques',about:'À propos',eyebrow:'Critique & design indépendants',
-  h1a:'Regarde vite.',h1b:'Pense longtemps.',heroP:'Des <b>posters</b> dessinés à la main et des <b>critiques</b> écrites sans détour.',heroCta:'Voir les posters',
+  h1a:'Watch it.',h1b:'Think it.',heroP:'Des <b>posters</b> dessinés à la main et des <b>critiques</b> écrites sans détour.',heroCta:'Voir les posters',
   ticker:['Design','Poster','Critique','Cinéma','Passion','Pensez','Imaginer','Échanger'],
   s1eb:'01 / Archives visuelles',s1h:'Posters',s1p:"Affiches originales en jaune, noir et crème. Touchez un poster pour lire la critique.",
   moreP:'Découvrir plus de posters',lessP:'Voir moins',noPoster:'Aucun poster pour le moment.',
@@ -160,8 +162,8 @@ const I18N={
   aboutLink:'Suivre @flickthink_ sur Instagram',footer:'© FlickThink — posters & critiques de cinéma',footerIg:'@flickthink_ sur Instagram',
   back:'Retour',comingSoon:'La critique de ce film arrive bientôt.',commentsT:n=>`Commentaires (${n})`,pseudo:'Votre pseudo',yourMsg:'Votre avis sur le film',publishC:'Publier le commentaire',needBoth:'Ajoutez un pseudo et un message',published:'Commentaire publié',
   admGate:'Espace admin',admHint:'Aperçu : le mot de passe de démo est <b>flick</b>. Sur le vrai site, la connexion sera sécurisée côté serveur.',pwPh:'Mot de passe',login:'Se connecter',wrongPw:'Mot de passe incorrect',newReview:'Nouvelle critique : ',postersOnline:' posters en ligne'},
- en:{posters:'Posters',critiques:'Reviews',about:'About',eyebrow:'Critic & designer',
-  h1a:'Look fast.',h1b:'Think slow.',heroP:'Hand-drawn <b>posters</b> and <b>reviews</b> written without filter.',heroCta:'See the posters',
+ en:{posters:'Posters',critiques:'Reviews',about:'About',eyebrow:'Independent critic & designer',
+  h1a:'Watch it.',h1b:'Think it.',heroP:'Hand-drawn <b>posters</b> and <b>reviews</b> written without filter.',heroCta:'See the posters',
   ticker:['Design','Poster','Review','Cinema','Passion','Think','Imagine','Share'],
   s1eb:'01 / Visual archive',s1h:'Posters',s1p:'Original artwork in yellow, black and cream. Tap a poster to read the review.',
   moreP:'Discover more posters',lessP:'Show less',noPoster:'No posters yet.',
@@ -201,6 +203,11 @@ function filmsList(){
  const map=new Map();
  db.posters.forEach(p=>{if(!map.has(p.film))map.set(p.film,{film:p.film,t:p.t,y:p.y});});
  return [...map.values()];
+}
+function allComments(){
+ const fm=filmsList(),list=[];
+ Object.keys(db.com).forEach(fk=>{const info=fm.find(f=>f.film===fk);(db.com[fk]||[]).forEach((c,i)=>list.push({filmKey:fk,idx:i,filmT:info?info.t:fk,...c}))});
+ return list;
 }
 function reviewsList(){
  const fm=filmsList();
@@ -257,6 +264,7 @@ function adminView(){
  </div></div>
  <div class="pan"><h2>Posters publiés</h2><p class="hint">Glissez un poster (icône ⠿) pour changer son ordre d'affichage sur la home page. Les flèches font la même chose, plus pratique sur mobile.</p><div class="plist" id="plist">${db.posters.map((p,i)=>`<div class="pitem" draggable="true" data-id="${p.id}"><span class="handle">⠿</span><div class="th2">${art(p)}</div><span>${esc(p.t)}${p.y?' · '+esc(String(p.y)):''}</span><span class="ord"><button class="iconbtn" data-up="${p.id}" ${i===0?'disabled':''} aria-label="Monter">↑</button><button class="iconbtn" data-down="${p.id}" ${i===db.posters.length-1?'disabled':''} aria-label="Descendre">↓</button><button class="btn ghost" data-editp="${p.id}">Modifier</button><button class="btn ghost" data-delp="${p.id}">Supprimer</button></span></div>`).join('')||'<p class="hint">Aucun poster.</p>'}</div></div>
  <div class="pan"><h2>Critiques publiées</h2>${reviewsList().map(r=>`<div class="item"><span>${esc(r.t)} · ${(+r.r).toFixed(1)}/5</span><span><button class="btn ghost" data-editr="${r.film}">Modifier</button> <button class="btn ghost" data-delr="${r.film}">Supprimer</button></span></div>`).join('')||'<p class="hint">Aucune critique.</p>'}</div>
+ <div class="pan"><h2>Commentaires publiés</h2>${allComments().map(c=>`<div class="citem"><span><b>${esc(c.n)}</b> sur <i>${esc(c.filmT)}</i> · ${esc(c.d)}<div class="txt">${esc(c.t.length>90?c.t.slice(0,90)+'…':c.t)}</div></span><button class="btn ghost" data-delc="${c.filmKey}|${c.idx}">Supprimer</button></div>`).join('')||'<p class="hint">Aucun commentaire.</p>'}</div>
  <div class="pan"><div class="item"><span class="hint">Les données de cet aperçu restent dans votre navigateur.</span><button class="btn ghost" id="lo">Se déconnecter</button></div></div>
  </div>`;
  $('#pa').onclick=async()=>{
@@ -300,6 +308,7 @@ function adminView(){
  });
  document.querySelectorAll('[data-editr]').forEach(b=>b.onclick=()=>{const film=b.dataset.editr;editReview={film,...db.reviews[film]};editPoster=null;adminView();window.scrollTo(0,0)});
  document.querySelectorAll('[data-delr]').forEach(b=>b.onclick=()=>{delete db.reviews[b.dataset.delr];save();toast('Critique supprimée');adminView()});
+ document.querySelectorAll('[data-delc]').forEach(b=>b.onclick=()=>{const[fk,idx]=b.dataset.delc.split('|');if(db.com[fk])db.com[fk].splice(+idx,1);save();toast('Commentaire supprimé');adminView()});
  $('#lo').onclick=()=>{admin=false;try{sessionStorage.removeItem('fta')}catch(e){}location.hash='#/'};
 }
 function shrink(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,700/i.width),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.82))};i.src=r.result};r.readAsDataURL(file)})}
